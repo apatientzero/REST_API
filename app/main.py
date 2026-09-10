@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import Optional
+from datetime import date
 from . import crud, schemas, models
 from .database import engine, get_db
 
@@ -24,9 +25,11 @@ def get_advertisements(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     title: Optional[str] = Query(None),
+    description: Optional[str] = Query(None),    # ← добавлено
     author: Optional[str] = Query(None),
     min_price: Optional[float] = Query(None, ge=0),
     max_price: Optional[float] = Query(None, ge=0),
+    created_at: Optional[date] = Query(None),    # ← добавлено
     db: Session = Depends(get_db)
 ):
     return crud.get_advertisements(
@@ -34,9 +37,11 @@ def get_advertisements(
         skip=skip,
         limit=limit,
         title=title,
+        description=description,      # ← добавлено
         author=author,
         min_price=min_price,
-        max_price=max_price
+        max_price=max_price,
+        created_at=created_at         # ← добавлено
     )
 
 @app.patch("/advertisement/{advertisement_id}", response_model=schemas.AdvertisementResponse)
