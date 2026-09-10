@@ -50,3 +50,36 @@ curl -X PATCH "http://localhost:8000/advertisement/1" \
 ### Удалить объявление
 
 curl -X DELETE "http://localhost:8000/advertisement/1"
+
+## Доработка: добавляем фильтры по description и created_at
+
+### Что изменил:
+
+Файлы: 
+
+crud.py:
+
+- Добавлены параметры description и created_at в функцию get_advertisements + логика фильтрации
+
+main.py:
+
+- Добавлены description и created_at как query-параметры + импорт date
+
+### Примеры запросов после доработки
+
+Поиск по описанию (подстрока, регистронезависимо)
+
+curl "http://localhost:8000/advertisement?description=отличное+состояние"
+
+Поиск по дате создания (формат YYYY-MM-DD)
+
+curl "http://localhost:8000/advertisement?created_at=2026-09-10"
+
+Комбинированный поиск
+
+curl "http://localhost:8000/advertisement?title=iPhone&description=новый&created_at=2026-09-10&min_price=40000"
+
+### Как проверить
+1. Запустите контейнеры: docker-compose up --build
+2. Откройте Swagger UI: http://localhost:8000/docs
+3. В эндпоинте GET /advertisement теперь видны все параметры, включая description и created_at
